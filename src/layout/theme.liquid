@@ -1,96 +1,154 @@
 <!doctype html>
+<!--[if IE 9]> <html class="ie9 no-js supports-no-cookies" lang="{{ shop.locale }}" data-customer='{{ customer.id }}'> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js supports-no-cookies" lang="{{ shop.locale }}"> <!--<![endif]-->
+<head class="sometester abc fix gulp">
+  <!-- HEAD CONTENT -->
+  {% include 'head' %}
+  <!-- TYPEKIT -->
+  {%  include 'typekit' %}
+  <!-- ADDITIONAL HEAD CONTENT (content_for_header) -->
 
-<html class="no-js supports-no-cookies" lang="{{ shop.locale }}">
-<head>
-  {% assign modClass = template | handle | prepend : "--"  %}
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="{{ settings.color_accent }}">
-  <link rel="canonical" href="{{ canonical_url }}">
-
-  <link rel="stylesheet" href="https://use.typekit.net/xgk6iqh.css">
-
-
-  {%- if settings.favicon != blank -%}
-    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
-  {%- endif -%}
-<!-- page title {{ page_title }} -->
-  <!-- general.meta.page {{ 'general.meta.page' | t: page: current_page }} -->
-  <!-- shopname {{ shop.name }} -->
-  {%- capture seo_title -%}
-    {{ page_title }}
-    {%- if current_tags -%}
-      {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
-    {%- endif -%}
-    {%- if current_page != 1 -%}
-      &ndash; {{ 'general.meta.page' | t: page: current_page }}
-    {%- endif -%}
-    {%- assign escaped_page_title = page_title | escape -%}
-    {%- unless escaped_page_title contains shop.name -%}
-      &ndash; {{ shop.name }}
-    {%- endunless -%}
-  {%- endcapture -%}
-  <title>{{ seo_title | strip }}</title>
-
-  {%- if page_description -%}
-    <meta name="description" content="{{ page_description | escape }}">
-  {%- endif -%}
-<!-- include 'social-meta-tags' -->
-  {% include 'social-meta-tags' %}
-  <!-- include 'style-tags' -->
-  {% include 'style-tags', layout: 'theme' %}
-  <!-- include 'css-variables' -->
-  {% include 'css-variables' %}
-
-  <script>
-    document.documentElement.className = document.documentElement.className.replace('no-js', '');
-
-    window.theme = {
-      strings: {
-        addToCart: {{ 'products.product.add_to_cart' | t | json }},
-        soldOut: {{ 'products.product.sold_out' | t | json }},
-        unavailable: {{ 'products.product.unavailable' | t | json }}
-      },
-      moneyFormat: {{ shop.money_format | json }}
-    };
-  </script>
-
-  {% include 'script-tags', layout: 'theme' %}
-
+  {% comment %}
   {{ content_for_header }}
+  {% endcomment %}
 
-  {% include 'ac-header-script-tags' %}
+  {% if template == 'cart' %}
+    {% unless customer.tags contains 'platinum' %}
+  <script>
+      function defer(method) {
+          if (window.jQuery) {
+              method();
+          } else {
+              setTimeout(function() { defer(method) }, 50);
+          }
+      }
+      {% if false %}
+      defer(function () {
+          var content_for_header = "{{ content_for_header | replace: '/', '\/' | replace: '"', '\"' | replace: 'quantity_breaks.php?shop=tempestdesigns.myshopify.com' : '' | strip_newlines  }}";
+          // Output content to the head, and add newlines where required
+          $('head').append(content_for_header
+              .replace(/}        /g, "}        \n")
+              .replace(/\/\/<!\[CDATA\[/g, "//<![CDATA[\n")
+              .replace(/\/\/]]>/g, "//]]>\n")
+          );
+      });
+      {% endif %}
+      defer(function () {
+        var content_for_header = "{{ content_for_header | replace: '/', '\/' | replace: '"', '\"' | replace: 'quantity_breaks.php?shop=tempestdesigns.myshopify.com' : '' | strip_newlines | replace: "<body onload='document._boomrl();'>", "<bodx onload='document._boomrl();'>" }}";
+        // Output content to the head, and add newlines where required
+        $('head').append(content_for_header
+          .replace(/}        /g, "}        \n")
+          .replace(/\/\/<!\[CDATA\[/g, "//<![CDATA[\n")
+          .replace(/\/\/]]>/g, "//]]>\n")
+        );
+      });
+  </script>
+    {% else %}
+      {% if false %}
+        {{ content_for_header }}
+      {% endif %}
+      {{ content_for_header | replace: "<body onload='document._boomrl();'>", "<bodx onload='document._boomrl();'>" }}
+    {% endunless %}
+    {% else %}
+      {% if false %}
+        {{ content_for_header }}
+      {% endif %}
+      {{ content_for_header | replace: "<body onload='document._boomrl();'>", "<bodx onload='document._boomrl();'>" }}
+  {% endif %}
+
 
 </head>
 
-<body id="siteBody" class="template-{{ template | handle }}" data-template="{{ template.name | handle }}" data-template-type="{{ template.suffix | replace : ' ', '_' | replace : '-', '_'}}">
+{% include 'body-tag' %}
+<div id="page" class="site">
 
-<div style="display: none;">
-  {% include "defs.svg" %}
-</div>
+  <div class="site__accessibility">
+    <a class="accessibility__link in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+  </div>
 
-{% include "ac-cart-drawer" %}
-<div id="page" class="l-site">
-  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+  {% section 'header' %}
 
-    {% section 'header' %}
+  <main role="main" id="MainContent" class="site__main">
+    <div class="main">
+      <div class="main__content{% if template != null %}--{{ template | handleize }} {% endif %}">
 
-  <div id="searchFormMain" class="l-site__site-search-form" data-state="off" data-container="siteSearch" >
-    {% include 'ac-site-search-form' %}
-  </div><!-- site-controls__search -->
+        {%  include  'logic-access'%}
+        {% case access %}
+        {% when 'full' %}
+        <!-- template {{ template }} -->
+        <!-- access {{ access }} -->
+        <!-- customerAccess {{ customerAccess }} -->
+        {{  content_for_layout }}
+        {% when 'SEO' %}
+          <!-- template {{ template }} -->
+          <!-- access {{ access }} -->
+          <!-- customerAccess {{ customerAccess }} -->
+          {{  content_for_layout }}
+        {% when 'inactive' %}
+        <!-- template {{ template }} -->
+        <!-- access {{ access }} -->
+        <!-- customerAccess {{ customerAccess }} -->
+        {% include 'main-content-inactive' %}
+        {% when 'restricted' %}
+        <!-- template {{ template }} -->
+        <!-- access {{ access }} -->
+        <!-- customerAccess {{ customerAccess }} -->
+          {% include 'main-content-restricted' %}
+        {% endcase %}
 
-  <main class="l-site__main" role="main" id="MainContent">
-    <div class="l-main{{ modClass }}">
-    {{ content_for_layout }}
+      </div>
     </div>
   </main>
-
   {% section 'footer' %}
-  {% include 'ac-timberjs' %}
 </div>
 
-{% render 'ocuapp-theme', ocuapp: ocuapp %}
-{% assign ocuapp = true %}
+
+
+
+<!--BeginCFFPersistentCartCart-->
+{% if customer %}
+<script>
+
+    window.cffCustomer = {
+        name: '{{customer.name}}',
+        email: '{{customer.email}}',
+        hasAccount: '{{customer.has_account}}',
+        id: '{{customer.id}}'
+    };
+
+
+</script>
+
+{% endif %}
+
+<script>
+    window.cffPCLiquidPlaced = true
+</script>
+
+<!--EndCFFPersistentCartCart-->
+<div style='display: none;' id='ait-customer-id'>{{customer.id}}</div>
+
+
+<!-- LuckyOrange Script -->
+<script type='text/javascript'>
+window.__lo_site_id = 139417;
+
+	(function() {
+		var wa = document.createElement('script'); wa.type = 'text/javascript'; wa.async = true;
+		wa.src = 'https://d10lpsik1i8c69.cloudfront.net/w.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(wa, s);
+	  })();
+	</script>
+
+
+{% comment %}
+<!-- SOLD OUT OPTIONS -->
+{% include 'disable-sold-out' %}
+{% endcomment %}
+
+{% include 'adolab-get-clicked-seo' %}
+
 </body>
+
+
 </html>

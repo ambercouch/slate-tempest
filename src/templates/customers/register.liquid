@@ -1,81 +1,56 @@
-<div class="l-main__page--static-page l-main__page{{ page.title | handle }}">
-  <div class="l-page--static-page l-page--{{ page.title | handle }}">
+<div class="customer-register">
+  <div class="customer-register__header">
+    <h1 class="customer-register__heading">{{ 'customer.register.title' | t }}</h1>
+  </div>
+  <div class="customer-register__form">
+    {% form 'create_customer' %}
+    {{ form.errors | default_errors }}
+    <div class="customer-register__form-content">
 
-    <header class="l-page__header--static-page l-page__header--{{ page.title | handle }} {{ classHeroImage }} {{ classHeroText }}" role="banner">
-      <h1 class="l-page__heading--static-page l-page__heading--{{ page.title | handle }}" >
-        <span class="l-page__title">{{ 'customer.register.title' | t }}</span>
-      </h1>
-    </header>
-    <div class="c-contact-form">
-{% form 'create_customer' %}
-  {{ form.errors | default_errors }}
+      {% include 'register-form-controls--about' %}
+      {% include 'register-form-controls--company' %}
+      {% include 'register-form-controls--address' %}
 
-  <label for="FirstName" >
-     <span class="c-contact-form__label-text" >
-    {{ 'customer.register.first_name' | t }}
-     </span>
-    <span class="c-contact-form__input-wrapper" >
-  <input type="text"
-         class="c-contact-form__input"
-    name="customer[first_name]"
-    id="FirstName"
-    placeholder="{{ 'customer.register.first_name' | t }}"
-    autofocus
-    {% if form.first_name %}value="{{ form.first_name }}"{% endif %}>
-    </span>
-  </label>
-
-  <label for="LastName" >
-     <span class="c-contact-form__label-text" >
-    {{ 'customer.register.last_name' | t }}
-     </span>
-    <span class="c-contact-form__input-wrapper" >
-  <input type="text"
-         class="c-contact-form__input"
-    name="customer[last_name]"
-    id="LastName"
-    placeholder="{{ 'customer.register.last_name' | t }}"
-    {% if form.last_name %}value="{{ form.last_name }}"{% endif %}>
-    </span>
-  </label>
-
-  <label for="Email">
-     <span class="c-contact-form__label-text" >
-    {{ 'customer.register.email' | t }}
-     </span>
-    <span class="c-contact-form__input-wrapper" >
-  <input type="email"
-         class="c-contact-form__input"
-    name="customer[email]"
-    id="Email"
-    class="{% if form.errors contains 'email' %}input-error{% endif %}"
-    placeholder="{{ 'customer.register.email' | t }}"
-    value="{% if form.email %}{{ form.email }}{% endif %}"
-    spellcheck="false"
-    autocomplete="off"
-    autocapitalize="off">
-    </span>
-  </label>
-
-  <label for="CreatePassword">
-     <span class="c-contact-form__label-text" >
-    {{ 'customer.register.password' | t }}
-     </span>
-    <span class="c-contact-form__input-wrapper" >
-  <input type="password"
-         class="c-contact-form__input"
-    name="customer[password]"
-    id="CreatePassword"
-    class="{% if form.errors contains 'password' %}input-error{% endif %}"
-    placeholder="{{ 'customer.register.password' | t }}">
-    </span>
-  </label>
-
-      <div class="c-contact-form__input-wrapper--submit">
-    <input type="submit" value="{{ 'customer.register.submit' | t }}" class="c-btn--contact-submit c-contact-form__input--submit">
+      <div class="customer-register__form-control">
+        <label for="CreatePassword" class="label-hidden customer-register__label">
+          {{ 'customer.register.password' | t }}
+        </label>
+        <input type="password"
+               name="customer[password]"
+               class="customer-login__input"
+               id="CreatePassword"
+               class="{% if form.errors contains 'password' %}input-error{% endif %}"
+               placeholder="{{ 'customer.register.password' | t }}"
+               required>
       </div>
-  <a href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
-{% endform %}
+
+      <div class="customer-register__form-control">
+        <label for="referrer" class="label-hidden customer-register__label">
+          How did you hear about Us?
+        </label>
+        <select
+            name="customer[note][referrer]"
+            class="customer-register__form-select"
+            id="referrer"
+            data-default="{{ form.country }}">
+          <option value="" style="color: #999" disabled selected>How did you hear about Us?</option>
+          <option value="Social Media">Social Media</option>
+          <option value="Trade Show ">Trade Show </option>
+          <option value="Press">Press</option>
+          <option value="Web">Web</option>
+          <option value="Word of Mouth">Word of Mouth</option>
+          <option value="Store">Store</option>
+        </select>
+      </div>
+
+      <input class="customer-login__submit btn " type="submit" value="{{ 'customer.register.submit' | t }}">
+
+      <div class="customer-register__control-links">
+        <a class="customer-login__link " href="{{ shop.url }}">{{ 'customer.register.cancel' | t }}</a>
+      </div>
     </div>
+    <div class="bold-loyalties-code"></div>
+    <script src="https://loy.boldapps.net/app_assets/js/client/signup-refer.js"></script>
+    {% endform %}
   </div>
 </div>
