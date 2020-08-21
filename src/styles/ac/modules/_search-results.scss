@@ -72,11 +72,19 @@
 
 .predictiveSearch--results{
   margin-top: 10px;
+  max-height: 50vh;
+  overflow: scroll;
+  @include mq($from : tablet){
+    max-height: 100%;
+  }
   &--item{
     padding: 0;
     border-bottom: 1px solid gray;
     @include mq($from : tablet){
       padding:10px;
+    }
+    div{
+      padding: 10px;
     }
     h3{
       white-space: normal;

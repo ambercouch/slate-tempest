@@ -36,7 +36,7 @@ ACSHOPIFY = {
             var searchForm = $("#siteSearchForm");
 
             //Adds search results predictive
-            $('#siteSearchForm').after('<div id="predictiveSearch--results"></div>');
+            $('#siteSearchForm').after('<div id="predictiveSearch--results" class="predictiveSearch--results"></div>');
             let results = '';
 
             //When input val changes update the searchVal var
