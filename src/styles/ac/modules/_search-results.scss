@@ -69,3 +69,17 @@
 .filter-group.has_group_selected.has_single_item {
   display: inherit !important;
 }
+
+.predictiveSearch--results{
+  margin-top: 10px;
+  &--item{
+    padding:10px;
+    clear:both;
+    &--img{
+      width:150px;
+      height:150px;
+      object-fit: cover;
+      padding: 10px;
+    }
+  }
+}

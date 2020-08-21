@@ -8,12 +8,12 @@
 
 //FidVids - uses custom selector because the youtube vid is lazy loaded so does not exist until modal is opened
 //$("[data-fitvid]").fitVids({ customSelector: "iframe[data-youtube-iframe]"});
-
+console.log("Hello 1");
 console.log('ACSHOPIFY2 3');
 ACSHOPIFY = {
     common: {
         init: function () {
-
+console.log("Hello 2");
             'use strict';
             //uncomment to debug
                 console.log('common customer data search 5 6');
@@ -38,10 +38,36 @@ ACSHOPIFY = {
             var searchValWild = '';
             var searchForm = $("#siteSearchForm");
 
+            //Adds search results predictive
+            $('#siteSearchForm').after('<div id="predictiveSearch--results"></div>');
+
             //When input val changes update the searchVal var
-            $(document).on('change','#Search', function () {
+           $(document).on('keyup','#Search', function () {
                 searchVal = $(this).val();
-            })
+                let query = "/search/suggest.json?q="+searchVal+"&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last";
+                fetch(query)
+                .then(response => response.json())
+                .then(suggestions => {
+                  const productSuggestions = suggestions.resources.results.products;
+                  console.log(productSuggestions);
+
+                  if (productSuggestions.length > 0) {
+                    let results = '';
+
+                    productSuggestions.forEach((item, i) => {
+                      let resultsTitle = '<h3>' + item.title + '</h3>';
+                      let resultsPrice = '<p class="resultsPrice"> £' + item.price + '</p>';
+                      let resultsIMG = '<img class="predictiveSearch--results--item--img" src='+item.featured_image.url+'>';
+
+                     results = results + '<div class="predictiveSearch--results--item"><a class="predictiveSearch--results--item--link" href="'+item.url+'"><div>' + resultsTitle + resultsPrice + '</div> ' + resultsIMG + ' </a></div>';
+
+                    });
+
+                    $('#predictiveSearch--results').html(results);
+
+                  }
+                });
+            });
 
             // when clicking the submit but on..
             $(document).on('click' , 'button#searchSubmit' , function (e) {
