@@ -25,7 +25,7 @@ ACSHOPIFY = {
             }else {
                 Cookies.set("ac-30day", 0, { expires : 1 });
             }
-
+customerTags =1;
             //add js class
 
             $('body').addClass('js');
@@ -44,7 +44,7 @@ ACSHOPIFY = {
                 searchVal = $(this).val();
 
                 if (searchVal.length >= 1){
-                  let query = "/search/suggest.json?q="+searchVal+"&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last&resources[options][feilds]=variants.sku";
+                  /*let query = "/search/suggest.json?q="+searchVal+"&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last&resources[options][feilds]=variants.sku";
                   fetch(query)
                   .then(response => response.json())
                   .then(suggestions => {
@@ -72,11 +72,48 @@ ACSHOPIFY = {
 
                       });
                     }
+                });*/
+                jQuery.getJSON("/search/suggest.json", {
+                  "q": searchVal,
+                  "resources": {
+                    "type": "product",
+                    "limit": 4,
+                    "options": {
+                      "unavailable_products": "last",
+                      "fields": "title,product_type,variants.title,variants.sku"
+                    }
+                  }
+                }).done(function(response) {
+                  var productSuggestions = response.resources.results.products;
+                  console.log(productSuggestions)
+
+                  if (productSuggestions.length > 0) {
+                    results = '';
+                      productSuggestions.forEach((item, i) => {
+                        let resultsTitle = '<h3>' + item.title + '</h3>';
+                        let resultsVend = '<p>' + item.vendor + '</p>';
+                        let resultsPrice = "";
+
+                        if (customerTags !== undefined) {
+                           resultsPrice = '<p class="resultsPrice"> £' + item.price + '</p>';
+                        }
+
+                        let resultsIMG = '<img class="predictiveSearch--results--item--img" src='+item.featured_image.url+'>';
+                        if (item.featured_image.url === null){
+                          resultsIMG = "<p style='width: 150px; text-align:center;'> No image <br> available </p>";
+                        }
+
+                       results = results + '<div class="predictiveSearch--results--item"><a class="predictiveSearch--results--item--link" href="'+item.url+'"> ' + resultsIMG + ' <div>' + resultsTitle + resultsVend + resultsPrice + '</div></a></div>';
+
+                      });
+                      $('#predictiveSearch--results').html(results);
+                    }
                 });
               } else {
                 results = '';
-              }
                 $('#predictiveSearch--results').html(results);
+              }
+                //$('#predictiveSearch--results').html(results);
             });
 
             // when clicking the submit but on..
