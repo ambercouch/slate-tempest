@@ -8,12 +8,10 @@
 
 //FidVids - uses custom selector because the youtube vid is lazy loaded so does not exist until modal is opened
 //$("[data-fitvid]").fitVids({ customSelector: "iframe[data-youtube-iframe]"});
-console.log("Hello 1");
 console.log('ACSHOPIFY2 3');
 ACSHOPIFY = {
     common: {
         init: function () {
-console.log("Hello 2");
             'use strict';
             //uncomment to debug
                 console.log('common customer data search 5 6');
@@ -28,7 +26,6 @@ console.log("Hello 2");
                 Cookies.set("ac-30day", 0, { expires : 1 });
             }
 
-
             //add js class
 
             $('body').addClass('js');
@@ -40,33 +37,46 @@ console.log("Hello 2");
 
             //Adds search results predictive
             $('#siteSearchForm').after('<div id="predictiveSearch--results"></div>');
+            let results = '';
 
             //When input val changes update the searchVal var
            $(document).on('keyup','#Search', function () {
                 searchVal = $(this).val();
-                let query = "/search/suggest.json?q="+searchVal+"&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last";
-                fetch(query)
-                .then(response => response.json())
-                .then(suggestions => {
-                  const productSuggestions = suggestions.resources.results.products;
-                  console.log(productSuggestions);
+
+                if (searchVal.length >= 1){
+                  let query = "/search/suggest.json?q="+searchVal+"&resources[type]=product&resources[limit]=4&resources[options][unavailable_products]=last&resources[options][feilds]=variants.sku";
+                  fetch(query)
+                  .then(response => response.json())
+                  .then(suggestions => {
+                    const productSuggestions = suggestions.resources.results.products;
+                    console.log(productSuggestions);
 
                   if (productSuggestions.length > 0) {
-                    let results = '';
+                    results = '';
+                      productSuggestions.forEach((item, i) => {
+                        let resultsTitle = '<h3>' + item.title + '</h3>';
+                        let resultsVend = '<p>' + item.vendor + '</p>';
+                        let resultsPrice = "";
 
-                    productSuggestions.forEach((item, i) => {
-                      let resultsTitle = '<h3>' + item.title + '</h3>';
-                      let resultsPrice = '<p class="resultsPrice"> £' + item.price + '</p>';
-                      let resultsIMG = '<img class="predictiveSearch--results--item--img" src='+item.featured_image.url+'>';
+                        if (customerTags !== undefined) {
+                           resultsPrice = '<p class="resultsPrice"> £' + item.price + '</p>';
+                        }
 
-                     results = results + '<div class="predictiveSearch--results--item"><a class="predictiveSearch--results--item--link" href="'+item.url+'"><div>' + resultsTitle + resultsPrice + '</div> ' + resultsIMG + ' </a></div>';
+                        let resultsIMG = '<img class="predictiveSearch--results--item--img" src='+item.featured_image.url+'>';
+                        if (item.featured_image.url === null){
+                          resultsIMG = "<p style='width: 150px; text-align:center;'> No image <br> available </p>";
+                        }
 
-                    });
 
-                    $('#predictiveSearch--results').html(results);
+                       results = results + '<div class="predictiveSearch--results--item"><a class="predictiveSearch--results--item--link" href="'+item.url+'"> ' + resultsIMG + ' <div>' + resultsTitle + resultsVend + resultsPrice + '</div></a></div>';
 
-                  }
+                      });
+                    }
                 });
+              } else {
+                results = '';
+              }
+                $('#predictiveSearch--results').html(results);
             });
 
             // when clicking the submit but on..
