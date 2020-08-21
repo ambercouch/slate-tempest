@@ -25,7 +25,7 @@ ACSHOPIFY = {
             }else {
                 Cookies.set("ac-30day", 0, { expires : 1 });
             }
-customerTags =1;
+
             //add js class
 
             $('body').addClass('js');
