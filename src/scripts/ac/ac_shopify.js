@@ -77,7 +77,7 @@ ACSHOPIFY = {
                   "q": searchVal,
                   "resources": {
                     "type": "product",
-                    "limit": 4,
+                    "limit": 10,
                     "options": {
                       "unavailable_products": "last",
                       "fields": "title,product_type,variants.title,variants.sku"
