@@ -21,6 +21,9 @@
  &search-site{
    line-height: 1;
    margin-bottom:$inuit-global-spacing-unit;
+   .search-results &{
+     display: none;
+   }
  }
 
 
