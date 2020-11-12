@@ -21,6 +21,9 @@
  &search-site{
    line-height: 1;
    margin-bottom:$inuit-global-spacing-unit;
+   .search-results &{
+     display: none;
+   }
  }
 
 
@@ -68,4 +71,38 @@
 
 .filter-group.has_group_selected.has_single_item {
   display: inherit !important;
+}
+
+.predictiveSearch--results{
+  max-height: 50vh;
+  overflow-y: scroll;
+  &--item{
+    padding: 0;
+    border-bottom: 1px solid gray;
+    @include mq($from : tablet){
+      padding:10px;
+    }
+    div{
+      padding: 10px;
+    }
+    h3{
+      white-space: normal;
+      font-size: 0.8rem;
+      @include mq($from : tablet){
+        font-size: 1rem;
+      }
+    }
+    &--img{
+      width:100px;
+      height:150px;
+      object-fit: cover;
+      padding: 10px;
+      @include mq($from : 23em){
+        width:150px;
+      }
+    }
+    &--link{
+      display: flex;
+    }
+  }
 }

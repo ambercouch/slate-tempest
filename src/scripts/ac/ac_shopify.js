@@ -8,12 +8,10 @@
 
 //FidVids - uses custom selector because the youtube vid is lazy loaded so does not exist until modal is opened
 //$("[data-fitvid]").fitVids({ customSelector: "iframe[data-youtube-iframe]"});
-
 console.log('ACSHOPIFY2 3');
 ACSHOPIFY = {
     common: {
         init: function () {
-
             'use strict';
             //uncomment to debug
                 console.log('common customer data search 5 6');
@@ -28,7 +26,6 @@ ACSHOPIFY = {
                 Cookies.set("ac-30day", 0, { expires : 1 });
             }
 
-
             //add js class
 
             $('body').addClass('js');
@@ -38,10 +35,58 @@ ACSHOPIFY = {
             var searchValWild = '';
             var searchForm = $("#siteSearchForm");
 
+            //Adds search results predictive
+            $('.search-site__form').after('<div id="predictiveSearch--results" class="predictiveSearch--results"></div>');
+            let results = '';
+
             //When input val changes update the searchVal var
-            $(document).on('change','#Search', function () {
+           $(document).on('keyup','#Search', function () {
                 searchVal = $(this).val();
-            })
+
+                if (searchVal.length >= 1){
+
+                jQuery.getJSON("/search/suggest.json", {
+                  "q": searchVal,
+                  "resources": {
+                    "type": "product",
+                    "limit": 10,
+                    "options": {
+                      "unavailable_products": "last",
+                      "fields": "title,product_type,variants.title,variants.sku"
+                    }
+                  }
+                }).done(function(response) {
+                  var productSuggestions = response.resources.results.products;
+                  console.log(productSuggestions)
+
+                  if (productSuggestions.length > 0) {
+                    results = '';
+                      productSuggestions.forEach((item, i) => {
+                        let resultsTitle = '<h3>' + item.title + '</h3>';
+                        let resultsVend = '<p>' + item.vendor + '</p>';
+                        let resultsPrice = "";
+
+                        if (customerTags !== undefined) {
+                           resultsPrice = '<p class="resultsPrice"> £' + item.price + '</p>';
+                        }
+
+                        let resultsIMG = '<img class="predictiveSearch--results--item--img" src='+item.featured_image.url+'>';
+                        if (item.featured_image.url === null){
+                          resultsIMG = "<p style='width: 150px; text-align:center;'> No image <br> available </p>";
+                        }
+
+                       results = results + '<div class="predictiveSearch--results--item"><a class="predictiveSearch--results--item--link" href="'+item.url+'"> ' + resultsIMG + ' <div>' + resultsTitle + resultsVend + resultsPrice + '</div></a></div>';
+
+                      });
+                      $('.predictiveSearch--results').html(results);
+                    }
+                });
+              } else {
+                results = '';
+                $('.predictiveSearch--results').html(results);
+              }
+                //$('#predictiveSearch--results').html(results);
+            });
 
             // when clicking the submit but on..
             $(document).on('click' , 'button#searchSubmit' , function (e) {
